@@ -7,5 +7,4 @@ public class RegistrationRequest {
     private String fullname;
     private String email;
     private String password;
-    private String verificationCode;
 }

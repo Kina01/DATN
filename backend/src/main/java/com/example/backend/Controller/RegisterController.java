@@ -30,10 +30,7 @@ public class RegisterController {
     @Autowired
     private EmailVerificationService emailVerificationService;
     
-    /**
-     * Gửi mã xác thực OTP đến email
-     * POST /user/send-verification
-     */
+    // Gửi mã xác thực OTP đến email
     @PostMapping("/send-verification")
     public ResponseEntity<Map<String, Object>> sendVerificationCode(@RequestBody VerificationRequest request) {
         try {
@@ -42,8 +39,7 @@ public class RegisterController {
                 response.put("message", "Email không được để trống");
                 response.put("status", "error");
                 return ResponseEntity.badRequest().body(response);
-            }
-            
+            }           
             emailVerificationService.generateAndSendVerificationCode(request.getEmail());
             
             Map<String, Object> response = new HashMap<>();
@@ -65,14 +61,44 @@ public class RegisterController {
         }
     }
     
-    /**
-     * Đăng ký tài khoản với xác thực OTP
-     * POST /user/register
-     */
+    // Xác thực mã OTP nha
+    @PostMapping("/verify-otp")
+    public ResponseEntity<Map<String, Object>> verifyOtp(@RequestBody VerificationRequest request) {
+        try {
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return createErrorResponse("Email không được để trống");
+            }
+            if (request.getVerificationCode() == null || request.getVerificationCode().trim().isEmpty()) {
+                return createErrorResponse("Mã xác thực không được để trống");
+            }
+            
+            boolean isValid = emailVerificationService.verifyCode(
+                request.getEmail().trim().toLowerCase(), 
+                request.getVerificationCode().trim()
+            );
+            
+            Map<String, Object> response = new HashMap<>();
+            if (isValid) {
+                response.put("message", "Xác thực thành công");
+                response.put("status", "success");
+                response.put("verified", true);
+                emailVerificationService.markEmailAsVerified(request.getEmail().trim().toLowerCase());
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "Mã xác thực không hợp lệ hoặc đã hết hạn");
+                response.put("status", "error");
+                response.put("verified", false);
+                return ResponseEntity.badRequest().body(response);
+            }           
+        } catch (Exception e) {
+            return createErrorResponse("Lỗi hệ thống khi xác thực mã OTP");
+        }
+    }
+    
+    // Đăng ký tài khoản (sau khi đã xác thực OTP thành công nha)
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody RegistrationRequest request) {
         try {
-            // Validate input
             if (request.getFullname() == null || request.getFullname().trim().isEmpty()) {
                 return createErrorResponse("Họ tên không được để trống");
             }
@@ -82,9 +108,6 @@ public class RegisterController {
             if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
                 return createErrorResponse("Mật khẩu không được để trống");
             }
-            if (request.getVerificationCode() == null || request.getVerificationCode().trim().isEmpty()) {
-                return createErrorResponse("Mã xác thực không được để trống");
-            }
             if (request.getPassword().length() < 6) {
                 return createErrorResponse("Mật khẩu phải có ít nhất 6 ký tự");
             }
@@ -92,11 +115,13 @@ public class RegisterController {
             boolean isRegistered = registerService.register(
                 request.getFullname().trim(), 
                 request.getEmail().trim().toLowerCase(), 
-                request.getPassword(), 
-                request.getVerificationCode().trim()
+                request.getPassword()
             );
             
             if (isRegistered) {
+                // Xóa mã OTP và trạng thái xác thực
+                emailVerificationService.clearVerificationOTPStatus(request.getEmail().trim().toLowerCase());
+                
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Đăng ký thành công!");
                 response.put("status", "success");
@@ -109,111 +134,13 @@ public class RegisterController {
             
             return createErrorResponse("Email đã tồn tại trong hệ thống");
             
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(e.getMessage());
-            
         } catch (Exception e) {
             e.printStackTrace();
             return createErrorResponse("Lỗi hệ thống khi đăng ký");
         }
     }
     
-    /**
-     * Kiểm tra email đã tồn tại chưa
-     * GET /user/check-email?email=test@example.com
-     */
-    @GetMapping("/check-email")
-    public ResponseEntity<Map<String, Object>> checkEmailExists(@RequestParam String email) {
-        try {
-            if (email == null || email.trim().isEmpty()) {
-                return createErrorResponse("Email không được để trống");
-            }
-            
-            boolean exists = registerService.checkEmailExists(email.trim().toLowerCase());
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("exists", exists);
-            response.put("message", exists ? "Email đã tồn tại" : "Email có thể sử dụng");
-            response.put("status", exists ? "error" : "success");
-            response.put("email", email);
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            return createErrorResponse("Lỗi hệ thống khi kiểm tra email");
-        }
-    }
-    
-    /**
-     * API test generate mã OTP (chỉ dùng cho development)
-     * GET /user/test-otp
-     */
-    @GetMapping("/test-otp")
-    public ResponseEntity<Map<String, Object>> testGenerateOtp() {
-        try {
-            String testCode = emailVerificationService.generateTestCode();
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("otp", testCode);
-            response.put("message", "Mã OTP test generated");
-            response.put("status", "success");
-            response.put("timestamp", System.currentTimeMillis());
-            
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return createErrorResponse("Lỗi generate OTP: " + e.getMessage());
-        }
-    }
-    
-    /**
-     * API test verify mã OTP (chỉ dùng cho development)
-     * POST /user/test-verify?email=test@example.com&code=123456
-     */
-    @PostMapping("/test-verify")
-    public ResponseEntity<Map<String, Object>> testVerifyOtp(
-            @RequestParam String email,
-            @RequestParam String code) {
-        
-        try {
-            if (email == null || email.trim().isEmpty()) {
-                return createErrorResponse("Email không được để trống");
-            }
-            if (code == null || code.trim().isEmpty()) {
-                return createErrorResponse("Mã OTP không được để trống");
-            }
-            
-            boolean isValid = emailVerificationService.verifyCode(email.trim().toLowerCase(), code.trim());
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("isValid", isValid);
-            response.put("message", isValid ? "Mã hợp lệ" : "Mã không hợp lệ hoặc đã hết hạn");
-            response.put("status", isValid ? "success" : "error");
-            response.put("email", email);
-            response.put("code", code);
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            return createErrorResponse("Lỗi verify OTP: " + e.getMessage());
-        }
-    }
-    
-    /**
-     * Health check endpoint
-     * GET /user/health
-     */
-    @GetMapping("/health")
-    public ResponseEntity<Map<String, Object>> healthCheck() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Register service is running");
-        response.put("timestamp", System.currentTimeMillis());
-        return ResponseEntity.ok(response);
-    }
-    
-    /**
-     * Helper method để tạo response lỗi
-     */
+    // Helper method để tạo response lỗi
     private ResponseEntity<Map<String, Object>> createErrorResponse(String message) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);

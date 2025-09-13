@@ -113,7 +113,7 @@ class _EmailScreenState extends State<EmailScreen> {
 
     if (response.status == 'success') {
       // Chuyển sang màn hình đăng ký với email đã xác thực
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => RegisterScreen(

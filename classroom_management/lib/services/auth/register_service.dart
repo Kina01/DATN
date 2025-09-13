@@ -11,9 +11,7 @@ class RegisterService {
       final response = await http.post(
         Uri.parse('$baseUrl/user/send-verification'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': email
-        }),
+        body: json.encode({'email': email}),
       );
 
       return ApiResponse.fromJson(json.decode(response.body));
@@ -29,10 +27,18 @@ class RegisterService {
   Future<ApiResponse> verifyCode(String email, String code) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/user/test-verify?email=$email&code=$code'),
+        Uri.parse('$baseUrl/user/verify-otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': email, 'verificationCode': code}),
       );
-
-      return ApiResponse.fromJson(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return ApiResponse.fromJson(json.decode(response.body));
+      } else {
+        return ApiResponse(
+          status: 'error',
+          message: 'Lỗi xác thực: ${response.statusCode}',
+        );
+      }
     } catch (e) {
       return ApiResponse(
         status: 'error',
