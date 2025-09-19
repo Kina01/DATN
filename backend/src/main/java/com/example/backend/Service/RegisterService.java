@@ -17,9 +17,6 @@ public class RegisterService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // @Autowired
-    // private EmailVerificationService emailVerificationService;
-
     @Transactional
     public boolean register(String fullname, String email, String password) {
         try {
@@ -35,7 +32,6 @@ public class RegisterService {
             return true;
 
         } catch (Exception e) {
-            System.err.println("ERROR in register: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }

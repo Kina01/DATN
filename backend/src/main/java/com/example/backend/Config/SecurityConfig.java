@@ -22,6 +22,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/user/send-verification").permitAll()
             .requestMatchers("/user/check-email").permitAll()
             .requestMatchers("/user/verify-otp").permitAll()
+            .requestMatchers("/time-table/add-time-table").permitAll()
+            .requestMatchers("/time-table/update-time-table/{id}").permitAll()
+            .requestMatchers("/time-table/delete-time-table/{id}").permitAll()
             .anyRequest().authenticated()
         );
     return http.build();

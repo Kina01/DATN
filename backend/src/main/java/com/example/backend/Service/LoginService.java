@@ -13,8 +13,10 @@ import com.example.backend.Repository.UserRepository;
 @Service
 public class LoginService {
     
-    @Autowired private UserRepository login;
-    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired 
+    private UserRepository login;
+    @Autowired 
+    private PasswordEncoder passwordEncoder;
 
     public boolean login(String email, String password)
     {

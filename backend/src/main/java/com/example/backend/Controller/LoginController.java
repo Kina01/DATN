@@ -12,25 +12,23 @@ import com.example.backend.Service.LoginService;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = { "http://localhost:4200", "http://192.168.0.107:4200" }, 
-            allowedHeaders = "*", 
-            allowCredentials = "true", 
-            methods = { RequestMethod.GET, 
-                        RequestMethod.POST, 
-                        RequestMethod.PUT, 
-                        RequestMethod.DELETE })
+@CrossOrigin(origins = { "http://localhost:4200",
+        "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true", methods = { RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE })
 public class LoginController {
-    
-    @Autowired private LoginService loginService;
+
+    @Autowired
+    private LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,String>> login(@RequestBody UserEntity login) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserEntity login) {
         try {
             boolean check = loginService.login(login.getEmail(), login.getPassword());
             Map<String, String> response = new HashMap<>();
 
-            if(check)
-            {
+            if (check) {
                 UserEntity user = loginService.findByAccount(login.getEmail());
                 response.put("message", "Đăng nhập thành công!");
                 response.put("id", String.valueOf(user.getId()));
