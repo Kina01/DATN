@@ -8,12 +8,29 @@ public class GradeDTO {
         private Double midtermScore;
         private String comments;
 
-        public Double getProcessScore() { return processScore; }
-        public void setProcessScore(Double processScore) { this.processScore = processScore; }
-        public Double getMidtermScore() { return midtermScore; }
-        public void setMidtermScore(Double midtermScore) { this.midtermScore = midtermScore; }
-        public String getComments() { return comments; }
-        public void setComments(String comments) { this.comments = comments; }
+        public Double getProcessScore() {
+            return processScore;
+        }
+
+        public void setProcessScore(Double processScore) {
+            this.processScore = processScore;
+        }
+
+        public Double getMidtermScore() {
+            return midtermScore;
+        }
+
+        public void setMidtermScore(Double midtermScore) {
+            this.midtermScore = midtermScore;
+        }
+
+        public String getComments() {
+            return comments;
+        }
+
+        public void setComments(String comments) {
+            this.comments = comments;
+        }
     }
 
     // DTO cho chấm điểm hàng loạt
@@ -23,14 +40,36 @@ public class GradeDTO {
         private Double midtermScore;
         private String comments;
 
-        // Getters and Setters
-        public Long getStudentId() { return studentId; }
-        public void setStudentId(Long studentId) { this.studentId = studentId; }
-        public Double getProcessScore() { return processScore; }
-        public void setProcessScore(Double processScore) { this.processScore = processScore; }
-        public Double getMidtermScore() { return midtermScore; }
-        public void setMidtermScore(Double midtermScore) { this.midtermScore = midtermScore; }
-        public String getComments() { return comments; }
-        public void setComments(String comments) { this.comments = comments; }
+        public Long getStudentId() {
+            return studentId;
+        }
+
+        public void setStudentId(Long studentId) {
+            this.studentId = studentId;
+        }
+
+        public Double getProcessScore() {
+            return processScore;
+        }
+
+        public void setProcessScore(Double processScore) {
+            this.processScore = processScore;
+        }
+
+        public Double getMidtermScore() {
+            return midtermScore;
+        }
+
+        public void setMidtermScore(Double midtermScore) {
+            this.midtermScore = midtermScore;
+        }
+
+        public String getComments() {
+            return comments;
+        }
+
+        public void setComments(String comments) {
+            this.comments = comments;
+        }
     }
 }

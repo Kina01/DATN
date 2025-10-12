@@ -7,11 +7,21 @@ public class AuthDTO {
         private String email;
         private String password;
 
-        // Getters and Setters
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 
     // DTO cho xác thực email
@@ -19,11 +29,21 @@ public class AuthDTO {
         private String email;
         private String verificationCode;
 
-        // Getters and Setters
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-        public String getVerificationCode() { return verificationCode; }
-        public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getVerificationCode() {
+            return verificationCode;
+        }
+
+        public void setVerificationCode(String verificationCode) {
+            this.verificationCode = verificationCode;
+        }
     }
 
     // DTO cho đăng ký
@@ -32,12 +52,28 @@ public class AuthDTO {
         private String email;
         private String password;
 
-        // Getters and Setters
-        public String getFullName() { return fullName; }
-        public void setFullName(String fullName) { this.fullName = fullName; }
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 }

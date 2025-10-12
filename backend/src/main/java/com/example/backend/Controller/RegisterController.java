@@ -102,7 +102,6 @@ public class RegisterController {
 
     private ResponseEntity<Map<String, Object>> registerUser(AuthDTO.RegistrationRequest request, User.Role role) {
         try {
-            // Validate input
             if (request.getFullName() == null || request.getFullName().trim().isEmpty()) {
                 return createErrorResponse("Họ tên không được để trống");
             }
@@ -130,7 +129,6 @@ public class RegisterController {
             }
 
             if (isRegistered) {
-                // Xóa mã OTP và trạng thái xác thực
                 emailVerificationService.clearVerificationOTPStatus(request.getEmail().trim().toLowerCase());
 
                 Map<String, Object> response = new HashMap<>();

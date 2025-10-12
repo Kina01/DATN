@@ -48,7 +48,7 @@ public class AttendanceService {
             throw new RuntimeException("Bạn không có quyền điểm danh cho lớp này");
         }
 
-        // Xóa điểm danh cũ cho buổi học này (nếu có)
+        // Xóa điểm danh cũ cho buổi học này
         List<Attendance> existingAttendances = attendanceRepository.findBySchedule(schedule);
         attendanceRepository.deleteAll(existingAttendances);
 

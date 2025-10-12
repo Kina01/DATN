@@ -37,7 +37,6 @@ public class Subject {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // === QUAN HỆ ===
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grade> grades = new ArrayList<>();
 

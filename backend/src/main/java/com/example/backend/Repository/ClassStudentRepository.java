@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ClassStudentRepository extends JpaRepository<ClassStudent, Long> {
     
-    // Tìm ClassStudent theo lớp và sinh viên (SỬA LẠI)
+    // Tìm ClassStudent theo lớp và sinh viên
     Optional<ClassStudent> findByClassObjAndStudent(ClassEntity classObj, User student);
     
     // Lấy tất cả ClassStudent theo lớp
@@ -26,11 +26,11 @@ public interface ClassStudentRepository extends JpaRepository<ClassStudent, Long
     // Kiểm tra sinh viên đã có trong lớp chưa
     boolean existsByClassObjAndStudent(ClassEntity classObj, User student);
     
-    // Tìm theo classId và studentId (THÊM PHƯƠNG THỨC MỚI)
+    // Tìm theo classId và studentId
     @Query("SELECT cs FROM ClassStudent cs WHERE cs.classObj.classId = :classId AND cs.student.userId = :studentId")
     Optional<ClassStudent> findByClassIdAndStudentId(@Param("classId") Long classId, @Param("studentId") Long studentId);
     
-    // Kiểm tra tồn tại theo classId và studentId (THÊM PHƯƠNG THỨC MỚI)
+    // Kiểm tra tồn tại theo classId và studentId
     @Query("SELECT COUNT(cs) > 0 FROM ClassStudent cs WHERE cs.classObj.classId = :classId AND cs.student.userId = :studentId")
     boolean existsByClassIdAndStudentId(@Param("classId") Long classId, @Param("studentId") Long studentId);
 }

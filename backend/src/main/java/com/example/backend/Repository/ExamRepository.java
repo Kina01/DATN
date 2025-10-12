@@ -13,6 +13,6 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     // Tìm lịch thi theo lớp
     List<Exam> findByClassObj(ClassEntity classObj);
     
-    // Tìm lịch thi theo môn học (nếu cần)
+    // Tìm lịch thi theo môn học
     // List<Exam> findBySubject(Subject subject);
 }

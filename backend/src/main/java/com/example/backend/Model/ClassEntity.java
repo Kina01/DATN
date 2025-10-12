@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Nationalized;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,13 +43,9 @@ public class ClassEntity {
     @OneToMany(mappedBy = "classObj", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exam> exams = new ArrayList<>();
 
-    // === QUAN HỆ MỚI THÊM CHO ĐIỂM DANH VÀ CHẤM ĐIỂM ===
-    
-    // Quan hệ 1-nhiều với Attendance
     @OneToMany(mappedBy = "classObj", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attendance> attendances = new ArrayList<>();
 
-    // Quan hệ 1-nhiều với Grade
     @OneToMany(mappedBy = "classObj", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grade> grades = new ArrayList<>();
 }

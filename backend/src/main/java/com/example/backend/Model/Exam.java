@@ -19,12 +19,10 @@ public class Exam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long examId;
 
-    // Quan hệ nhiều-1 với Class
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     private ClassEntity classObj;
 
-    // Quan hệ nhiều-1 với Subject
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;

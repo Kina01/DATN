@@ -19,13 +19,11 @@ public class ClassStudent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Quan hệ nhiều-1 với Class
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "teacher", "classStudents"})
     private ClassEntity classObj;
 
-    // Quan hệ nhiều-1 với User (Sinh viên)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})

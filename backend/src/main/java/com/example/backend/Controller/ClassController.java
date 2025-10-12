@@ -31,13 +31,12 @@ public class ClassController {
         try {
             ClassEntity createdClass = classService.createClass(createClassRequest, teacherId);
 
-            // Chuyển đổi sang DTO để tránh lỗi lặp vô hạn
             ClassDTO.ClassResponse classResponse = ClassDTO.ClassResponse.fromEntity(createdClass);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Tạo lớp thành công");
             response.put("status", "success");
-            response.put("data", classResponse); // Sử dụng DTO thay vì Entity
+            response.put("data", classResponse);
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
@@ -51,18 +50,17 @@ public class ClassController {
     // Cập nhật lớp
     @PutMapping("/update/{classId}")
     public ResponseEntity<Map<String, Object>> updateClass(@PathVariable Long classId,
-            @RequestBody ClassDTO.UpdateClassRequest updateClassRequest, // Sử dụng DTO request
+            @RequestBody ClassDTO.UpdateClassRequest updateClassRequest,
             @RequestHeader("User-ID") Long teacherId) {
         try {
             ClassEntity updatedClass = classService.updateClass(classId, updateClassRequest, teacherId);
 
-            // Chuyển đổi sang DTO để tránh lỗi lặp vô hạn
             ClassDTO.ClassResponse classResponse = ClassDTO.ClassResponse.fromEntity(updatedClass);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Cập nhật lớp thành công");
             response.put("status", "success");
-            response.put("data", classResponse); // Sử dụng DTO thay vì Entity
+            response.put("data", classResponse);
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
@@ -220,21 +218,22 @@ public class ClassController {
 
     // // Tìm kiếm lớp
     // @GetMapping("/search")
-    // public ResponseEntity<Map<String, Object>> searchClasses(@RequestParam String keyword) {
-    //     try {
-    //         List<ClassEntity> classes = classService.searchClasses(keyword);
+    // public ResponseEntity<Map<String, Object>> searchClasses(@RequestParam String
+    // keyword) {
+    // try {
+    // List<ClassEntity> classes = classService.searchClasses(keyword);
 
-    //         Map<String, Object> response = new HashMap<>();
-    //         response.put("message", "Tìm kiếm thành công");
-    //         response.put("status", "success");
-    //         response.put("data", classes);
-    //         return ResponseEntity.ok(response);
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("message", "Tìm kiếm thành công");
+    // response.put("status", "success");
+    // response.put("data", classes);
+    // return ResponseEntity.ok(response);
 
-    //     } catch (Exception e) {
-    //         Map<String, Object> response = new HashMap<>();
-    //         response.put("message", "Lỗi tìm kiếm");
-    //         response.put("status", "error");
-    //         return ResponseEntity.badRequest().body(response);
-    //     }
+    // } catch (Exception e) {
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("message", "Lỗi tìm kiếm");
+    // response.put("status", "error");
+    // return ResponseEntity.badRequest().body(response);
+    // }
     // }
 }

@@ -14,7 +14,6 @@ public class SubjectDTO {
         private String subjectName;
         private Integer credits;
 
-        // Getters and Setters
         public String getSubjectCode() {
             return subjectCode;
         }
@@ -46,7 +45,6 @@ public class SubjectDTO {
         private String subjectName;
         private Integer credits;
 
-        // Getters and Setters
         public String getSubjectCode() {
             return subjectCode;
         }
@@ -78,7 +76,7 @@ public class SubjectDTO {
         private String subjectCode;
         private String subjectName;
         private Integer credits;
-        private UserDTO createdBy; // Thêm thông tin người tạo
+        private UserDTO createdBy;
         private LocalDateTime createdAt;
 
         public static SubjectResponse fromEntity(Subject subject) {
@@ -97,17 +95,52 @@ public class SubjectDTO {
             return response;
         }
 
-        public Long getSubjectId() { return subjectId; }
-        public void setSubjectId(Long subjectId) { this.subjectId = subjectId; }
-        public String getSubjectCode() { return subjectCode; }
-        public void setSubjectCode(String subjectCode) { this.subjectCode = subjectCode; }
-        public String getSubjectName() { return subjectName; }
-        public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
-        public Integer getCredits() { return credits; }
-        public void setCredits(Integer credits) { this.credits = credits; }
-        public UserDTO getCreatedBy() { return createdBy; }
-        public void setCreatedBy(UserDTO createdBy) { this.createdBy = createdBy; }
-        public LocalDateTime getCreatedAt() { return createdAt; }
-        public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+        public Long getSubjectId() {
+            return subjectId;
+        }
+
+        public void setSubjectId(Long subjectId) {
+            this.subjectId = subjectId;
+        }
+
+        public String getSubjectCode() {
+            return subjectCode;
+        }
+
+        public void setSubjectCode(String subjectCode) {
+            this.subjectCode = subjectCode;
+        }
+
+        public String getSubjectName() {
+            return subjectName;
+        }
+
+        public void setSubjectName(String subjectName) {
+            this.subjectName = subjectName;
+        }
+
+        public Integer getCredits() {
+            return credits;
+        }
+
+        public void setCredits(Integer credits) {
+            this.credits = credits;
+        }
+
+        public UserDTO getCreatedBy() {
+            return createdBy;
+        }
+
+        public void setCreatedBy(UserDTO createdBy) {
+            this.createdBy = createdBy;
+        }
+
+        public LocalDateTime getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+        }
     }
 }

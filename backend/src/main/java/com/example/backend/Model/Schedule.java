@@ -58,15 +58,13 @@ public class Schedule {
     @Column(nullable = false, length = 20)
     private String session; // MORNING, AFTERNOON
 
-    // === QUAN HỆ ===
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attendance> attendances = new ArrayList<>();
 
-    // Method tự động tính toán thời gian dựa trên tiết học
+    // Tự động tính toán thời gian dựa trên tiết học
     @PrePersist
     @PreUpdate
     public void calculateTime() {
-        // Đảm bảo startPeriod và endPeriod hợp lệ
         if (startPeriod == null || endPeriod == null) {
             throw new IllegalArgumentException("Start period và end period không được null");
         }
@@ -79,7 +77,6 @@ public class Schedule {
             throw new IllegalArgumentException("Start period không thể lớn hơn end period");
         }
 
-        // Tính thời gian bắt đầu và kết thúc
         this.startTime = getStartTimeByPeriod(startPeriod);
         this.endTime = getEndTimeByPeriod(endPeriod);
         

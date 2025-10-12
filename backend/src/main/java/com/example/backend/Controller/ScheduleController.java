@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
+// import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,10 +19,10 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    // Tạo lịch học mới - SỬA LẠI THÀNH DTO
+    // Tạo lịch học mới
     @PostMapping("/add/{classId}")
     public ResponseEntity<Map<String, Object>> createSchedule(@PathVariable Long classId,
-                                                             @RequestBody ScheduleDTO.CreateScheduleRequest request, // SỬA THÀNH DTO
+                                                             @RequestBody ScheduleDTO.CreateScheduleRequest request,
                                                              @RequestHeader("User-ID") Long teacherId) {
         try {
             var createdSchedule = scheduleService.createSchedule(request, classId, teacherId);
@@ -42,10 +42,10 @@ public class ScheduleController {
         }
     }
 
-    // Cập nhật lịch học - SỬA LẠI THÀNH DTO
+    // Cập nhật lịch học
     @PutMapping("/update/{scheduleId}")
     public ResponseEntity<Map<String, Object>> updateSchedule(@PathVariable Long scheduleId,
-                                                             @RequestBody ScheduleDTO.UpdateScheduleRequest request, // SỬA THÀNH DTO
+                                                             @RequestBody ScheduleDTO.UpdateScheduleRequest request,
                                                              @RequestHeader("User-ID") Long teacherId) {
         try {
             var updatedSchedule = scheduleService.updateSchedule(scheduleId, request, teacherId);
@@ -65,7 +65,7 @@ public class ScheduleController {
         }
     }
 
-    // Xóa lịch học (giữ nguyên)
+    // Xóa lịch học
     @DeleteMapping("/delete/{scheduleId}")
     public ResponseEntity<Map<String, Object>> deleteSchedule(@PathVariable Long scheduleId,
                                                              @RequestHeader("User-ID") Long teacherId) {
@@ -85,7 +85,7 @@ public class ScheduleController {
         }
     }
 
-    // Lấy lịch học theo lớp - SỬA LẠI TRẢ VỀ DTO
+    // Lấy lịch học theo lớp
     @GetMapping("/class/{classId}")
     public ResponseEntity<Map<String, Object>> getSchedulesByClass(@PathVariable Long classId) {
         try {
@@ -105,7 +105,7 @@ public class ScheduleController {
         }
     }
 
-    // Lấy lịch dạy của giáo viên - SỬA LẠI TRẢ VỀ DTO
+    // Lấy lịch dạy của giáo viên
     @GetMapping("/teacher")
     public ResponseEntity<Map<String, Object>> getTeacherSchedules(@RequestHeader("User-ID") Long teacherId) {
         try {
@@ -125,7 +125,7 @@ public class ScheduleController {
         }
     }
 
-    // Lấy lịch học theo tuần và ngày - SỬA LẠI TRẢ VỀ DTO
+    // Lấy lịch học theo tuần và ngày
     @GetMapping("/week/{week}/day/{dayOfWeek}")
     public ResponseEntity<Map<String, Object>> getSchedulesByWeekAndDay(@PathVariable Integer week,
                                                                        @PathVariable Integer dayOfWeek) {
@@ -146,7 +146,7 @@ public class ScheduleController {
         }
     }
 
-    // Lấy lịch học theo lớp và tuần - SỬA LẠI TRẢ VỀ DTO
+    // Lấy lịch học theo lớp và tuần
     @GetMapping("/class/{classId}/week/{week}")
     public ResponseEntity<Map<String, Object>> getSchedulesByClassAndWeek(@PathVariable Long classId,
                                                                          @PathVariable Integer week) {

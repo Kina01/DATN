@@ -13,8 +13,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/grades")
-@CrossOrigin(origins = { "http://localhost:4200", "http://192.168.0.107:4200" }, 
-             allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:4200",
+        "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true")
 public class GradeController {
 
     @Autowired
@@ -30,8 +30,8 @@ public class GradeController {
             @RequestHeader("User-ID") Long teacherId) {
         try {
             Grade grade = gradeService.addOrUpdateGrade(
-                    classId, studentId, subjectId, 
-                    request.getProcessScore(), request.getMidtermScore(), 
+                    classId, studentId, subjectId,
+                    request.getProcessScore(), request.getMidtermScore(),
                     request.getComments(), teacherId);
 
             Map<String, Object> response = new HashMap<>();

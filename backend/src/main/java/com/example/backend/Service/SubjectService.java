@@ -33,7 +33,7 @@ public class SubjectService {
             throw new RuntimeException("Chỉ giáo viên được phép tạo môn học");
         }
 
-        // Kiểm tra mã môn học đã tồn tại chưa (trong toàn hệ thống)
+        // Kiểm tra mã môn học đã tồn tại chưa
         if (subjectRepository.existsBySubjectCode(request.getSubjectCode())) {
             throw new RuntimeException("Mã môn học đã tồn tại: " + request.getSubjectCode());
         }
@@ -42,7 +42,8 @@ public class SubjectService {
         subject.setSubjectCode(request.getSubjectCode());
         subject.setSubjectName(request.getSubjectName());
         subject.setCredits(request.getCredits());
-        subject.setCreatedBy(teacher); // Lưu thông tin giáo viên tạo
+        // Lưu thông tin giáo viên tạo
+        subject.setCreatedBy(teacher);
 
         return subjectRepository.save(subject);
     }

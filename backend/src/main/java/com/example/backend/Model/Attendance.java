@@ -18,17 +18,14 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long attendanceId;
 
-    // Quan hệ nhiều-1 với Class
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     private ClassEntity classObj;
 
-    // Quan hệ nhiều-1 với User (Sinh viên)
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
 
-    // Quan hệ nhiều-1 với Schedule (Buổi học)
     @ManyToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
