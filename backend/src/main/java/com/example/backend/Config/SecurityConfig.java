@@ -17,14 +17,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/login").permitAll()
-            .requestMatchers("/user/register").permitAll()
-            .requestMatchers("/user/send-verification").permitAll()
-            .requestMatchers("/user/check-email").permitAll()
-            .requestMatchers("/user/verify-otp").permitAll()
-            .requestMatchers("/time-table/add-time-table").permitAll()
-            .requestMatchers("/time-table/update-time-table/{id}").permitAll()
-            .requestMatchers("/time-table/delete-time-table/{id}").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/classes/**").permitAll()
+            .requestMatchers("/api/subjects/**").permitAll()
+            .requestMatchers("/api/schedules/**").permitAll()
             .anyRequest().authenticated()
         );
     return http.build();

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hệ thống Quản lý Học tập</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --primary-light: #9e47ff;
+            --primary-dark: #0400ba;
+            --secondary-color: #03dac6;
+            --surface-color: #ffffff;
+            --background-color: #f5f5f5;
+            --error-color: #b00020;
+            --on-primary: #ffffff;
+            --on-secondary: #000000;
+            --on-surface: #000000;
+            --on-background: #000000;
+            --on-error: #ffffff;
+            --text-high: rgba(0, 0, 0, 0.87);
+            --text-medium: rgba(0, 0, 0, 0.60);
+            --text-disabled: rgba(0, 0, 0, 0.38);
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-elevated: 0 4px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--on-surface);
+            overflow-x: hidden;
+            height: 100vh;
+            position: fixed;
+            width: 100%;
+        }
+
+        /* Top App Bar */
+        .app-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background-color: var(--primary-color);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000;
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .app-bar__title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-left: 16px;
+            flex-grow: 1;
+        }
+
+        .app-bar__action {
+            background: none;
+            border: none;
+            color: var(--on-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        /* Navigation Rail (Bottom Navigation) */
+        .nav-rail {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background-color: var(--surface-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            height: 100%;
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item__icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 56px;
+            margin-bottom: 56px;
+            padding: 16px;
+            height: calc(100vh - 112px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .card__header {
+            padding: 16px;
+            font-weight: 500;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .card__content {
+            padding: 16px;
+        }
+
+        /* Lists */
+        .list {
+            list-style: none;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .list-item:active {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item__icon {
+            margin-right: 16px;
+            color: var(--text-medium);
+        }
+
+        .list-item__text {
+            flex-grow: 1;
+        }
+
+        .list-item__primary {
+            font-size: 16px;
+            color: var(--text-high);
+        }
+
+        .list-item__secondary {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-top: 4px;
+        }
+
+        .list-item__action {
+            color: var(--text-medium);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            padding: 0 16px;
+            background-color: var(--primary-color);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .button:active {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button--full {
+            width: 100%;
+        }
+
+        .button--outlined {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        /* Forms */
+        .text-field {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .text-field__input {
+            width: 100%;
+            height: 56px;
+            padding: 16px 12px 0 12px;
+            border: none;
+            border-bottom: 1px solid var(--text-medium);
+            background-color: transparent;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .text-field__input:focus {
+            border-bottom-color: var(--primary-color);
+            border-bottom-width: 2px;
+        }
+
+        .text-field__label {
+            position: absolute;
+            top: 18px;
+            left: 12px;
+            color: var(--text-medium);
+            font-size: 16px;
+            pointer-events: none;
+            transition: all 0.2s;
+        }
+
+        .text-field__input:focus + .text-field__label,
+        .text-field__input:not(:placeholder-shown) + .text-field__label {
+            top: 6px;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-medium);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background-color: var(--surface-color);
+            border-radius: 4px;
+            box-shadow: var(--shadow-elevated);
+            padding: 24px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 600px) {
+            body {
+                max-width: 600px;
+                margin: 0 auto;
+                border-left: 1px solid #e0e0e0;
+                border-right: 1px solid #e0e0e0;
+            }
+        }
+
+        /* Animation for page transitions */
+        .page {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h1 class="login-title">Đăng nhập</h1>
+            <div class="text-field">
+                <input type="text" id="username" class="text-field__input" placeholder=" " required>
+                <label for="username" class="text-field__label">Tên đăng nhập</label>
+            </div>
+            <div class="text-field">
+                <input type="password" id="password" class="text-field__input" placeholder=" " required>
+                <label for="password" class="text-field__label">Mật khẩu</label>
+            </div>
+            <div class="text-field">
+                <select id="role" class="text-field__input" style="padding-top: 20px;" required>
+                    <option value="" disabled selected>Chọn vai trò</option>
+                    <option value="admin">Quản trị viên</option>
+                    <option value="teacher">Giáo viên</option>
+                    <option value="student">Học sinh/Sinh viên</option>
+                </select>
+            </div>
+            <button id="loginBtn" class="button button--full">Đăng nhập</button>
+            <p class="text-center mt-16">Chưa có tài khoản? <a href="#" id="showRegister">Đăng ký ngay</a></p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="appContainer" class="hidden">
+        <!-- Top App Bar -->
+        <header class="app-bar">
+            <button class="app-bar__action" id="menuBtn">
+                <span class="material-icons">menu</span>
+            </button>
+            <h1 class="app-bar__title" id="pageTitle">Dashboard</h1>
+            <button class="app-bar__action" id="notificationsBtn">
+                <span class="material-icons">notifications</span>
+            </button>
+            <button class="app-bar__action" id="accountBtn">
+                <span class="material-icons">account_circle</span>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page">
+                <div class="card">
+                    <div class="card__header">Thống kê nhanh</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">group</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Tổng số lớp học</div>
+                                    <div class="list-item__secondary">12 lớp</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">person</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Số học sinh</div>
+                                    <div class="list-item__secondary">350 học sinh</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">school</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Số giáo viên</div>
+                                    <div class="list-item__secondary">25 giáo viên</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__header">Hoạt động gần đây</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">assignment</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Đã thêm bài tập mới</div>
+                                    <div class="list-item__secondary">10:30, 20/10/2023 - Cô giáo Lan</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">grade</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Đã cập nhật điểm thi</div>
+                                    <div class="list-item__secondary">09:15, 20/10/2023 - Thầy giáo Hùng</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">notifications</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Đã gửi thông báo mới</div>
+                                    <div class="list-item__secondary">14:20, 19/10/2023 - Quản trị viên</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classes Page -->
+            <div id="classesPage" class="page hidden">
+                <div class="card">
+                    <div class="card__header">Danh sách lớp học</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">class</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Lớp 10A1</div>
+                                    <div class="list-item__secondary">Giáo viên: Nguyễn Thị Lan - 35 học sinh</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">class</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Lớp 10A2</div>
+                                    <div class="list-item__secondary">Giáo viên: Trần Văn Hùng - 32 học sinh</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">class</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Lớp 11B1</div>
+                                    <div class="list-item__secondary">Giáo viên: Lê Thị Mai - 30 học sinh</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="button button--full">Thêm lớp mới</button>
+            </div>
+
+            <!-- Schedule Page -->
+            <div id="schedulePage" class="page hidden">
+                <div class="tabs">
+                    <div class="tab active" data-tab="weekly">Theo tuần</div>
+                    <div class="tab" data-tab="daily">Theo ngày</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card__header">Thời khóa biểu - Tuần 42</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">schedule</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Thứ 2</div>
+                                    <div class="list-item__secondary">Toán, Vật lý, Hóa học, Ngữ văn, Lịch sử</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">schedule</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Thứ 3</div>
+                                    <div class="list-item__secondary">Ngữ văn, Toán, Tiếng Anh, Địa lý, GDCD</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">schedule</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Thứ 4</div>
+                                    <div class="list-item__secondary">Tiếng Anh, Sinh học, Toán, Thể dục, Công nghệ</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grades Page -->
+            <div id="gradesPage" class="page hidden">
+                <div class="card">
+                    <div class="card__header">Kết quả học tập</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">calculate</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Toán học</div>
+                                    <div class="list-item__secondary">Điểm trung bình: 8.5</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">menu_book</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Ngữ văn</div>
+                                    <div class="list-item__secondary">Điểm trung bình: 7.8</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">language</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Tiếng Anh</div>
+                                    <div class="list-item__secondary">Điểm trung bình: 9.0</div>
+                                </div>
+                                <span class="list-item__action material-icons">chevron_right</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Page -->
+            <div id="notificationsPage" class="page hidden">
+                <div class="card">
+                    <div class="card__header">Thông báo mới</div>
+                    <div class="card__content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">info</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Lịch thi học kỳ I</div>
+                                    <div class="list-item__secondary">Thông báo lịch thi học kỳ I sẽ diễn ra từ ngày 15/12/2023</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">event</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Hoạt động ngoại khóa</div>
+                                    <div class="list-item__secondary">Chương trình ngoại khóa sẽ được tổ chức vào thứ 7 tuần sau</div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <span class="list-item__icon material-icons">assignment</span>
+                                <div class="list-item__text">
+                                    <div class="list-item__primary">Bài tập về nhà</div>
+                                    <div class="list-item__secondary">Có bài tập mới môn Toán cần nộp vào thứ 2</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="nav-rail">
+            <a href="#" class="nav-item active" data-page="dashboardPage">
+                <span class="nav-item__icon material-icons">dashboard</span>
+                <span class="nav-item__label">Trang chủ</span>
+            </a>
+            <a href="#" class="nav-item" data-page="classesPage">
+                <span class="nav-item__icon material-icons">class</span>
+                <span class="nav-item__label">Lớp học</span>
+            </a>
+            <a href="#" class="nav-item" data-page="schedulePage">
+                <span class="nav-item__icon material-icons">schedule</span>
+                <span class="nav-item__label">Thời khóa biểu</span>
+            </a>
+            <a href="#" class="nav-item" data-page="gradesPage">
+                <span class="nav-item__icon material-icons">grade</span>
+                <span class="nav-item__label">Điểm số</span>
+            </a>
+            <a href="#" class="nav-item" data-page="notificationsPage">
+                <span class="nav-item__icon material-icons">notifications</span>
+                <span class="nav-item__label">Thông báo</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const showRegister = document.getElementById('showRegister');
+        const navItems = document.querySelectorAll('.nav-item');
+        const pages = document.querySelectorAll('.page');
+        const pageTitle = document.getElementById('pageTitle');
+        const tabs = document.querySelectorAll('.tab');
+
+        // Login functionality
+        loginBtn.addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            if (username && password && role) {
+                // Switch to main application
+                loginScreen.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                
+                // Update page title based on role
+                let title = "Hệ thống QLHT";
+                if (role === 'student') title = "Học sinh: " + username;
+                else if (role === 'teacher') title = "Giáo viên: " + username;
+                pageTitle.textContent = title;
+            } else {
+                alert('Vui lòng điền đầy đủ thông tin đăng nhập!');
+            }
+        });
+
+        // Navigation functionality
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all nav items
+                navItems.forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all pages
+                pages.forEach(page => page.classList.add('hidden'));
+                
+                // Show corresponding page
+                const pageId = this.getAttribute('data-page');
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.remove('hidden');
+                    
+                    // Update page title
+                    const pageTitleText = this.querySelector('.nav-item__label').textContent;
+                    pageTitle.textContent = pageTitleText;
+                }
+            });
+        });
+
+        // Tab functionality
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // In a real app, you would load different content based on the tab
+            });
+        });
+
+        // Show register form
+        showRegister.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Chức năng đăng ký sẽ được triển khai tại đây.');
+        });
+
+        // App bar buttons
+        document.getElementById('menuBtn').addEventListener('click', function() {
+            alert('Menu sẽ được mở ra tại đây.');
+        });
+
+        document.getElementById('notificationsBtn').addEventListener('click', function() {
+            // Navigate to notifications page
+            navItems.forEach(nav => nav.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="notificationsPage"]').classList.add('active');
+            
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById('notificationsPage').classList.remove('hidden');
+            
+            pageTitle.textContent = "Thông báo";
+        });
+
+        document.getElementById('accountBtn').addEventListener('click', function() {
+            alert('Thông tin tài khoản sẽ được hiển thị tại đây.');
+        });
+
+        // Prevent zoom on double-tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

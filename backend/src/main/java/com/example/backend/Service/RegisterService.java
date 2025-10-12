@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.backend.Model.UserEntity;
+import com.example.backend.Model.User;
 import com.example.backend.Repository.UserRepository;
 
 @Service
@@ -18,7 +18,7 @@ public class RegisterService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public boolean register(String fullname, String email, String password) {
+    public boolean register(String fullName, String email, String password, User.Role role) {
         try {
             // Kiểm tra email đã tồn tại
             if (userRepository.existsByEmail(email)) {
@@ -26,7 +26,7 @@ public class RegisterService {
             }
 
             String encodedPassword = passwordEncoder.encode(password);
-            UserEntity newUser = new UserEntity(fullname, email, encodedPassword);
+            User newUser = new User(email, encodedPassword, fullName, role);
             userRepository.save(newUser);
 
             return true;
@@ -35,6 +35,16 @@ public class RegisterService {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Transactional
+    public boolean registerStudent(String fullName, String email, String password) {
+        return register(fullName, email, password, User.Role.STUDENT);
+    }
+
+    @Transactional
+    public boolean registerTeacher(String fullName, String email, String password) {
+        return register(fullName, email, password, User.Role.TEACHER);
     }
 
     public boolean checkEmailExists(String email) {

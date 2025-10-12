@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  final int userId;
-  final String fullname;
-  final String role;
+  // final int userId;
+  // final String fullname;
+  // final String role;
 
-  const HomeScreen({
-    Key? key,
-    required this.userId,
-    required this.fullname,
-    required this.role,
-  }) : super(key: key);
+  const HomeScreen({Key? key }) : super(key: key);
+    // required this.userId,
+    // required this.fullname,
+    // required this.role,
+  //}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

@@ -7,31 +7,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.backend.Model.UserEntity;
+import com.example.backend.Model.User;
 import com.example.backend.Repository.UserRepository;
 
 @Service
 public class LoginService {
     
     @Autowired 
-    private UserRepository login;
+    private UserRepository userRepository;
+    
     @Autowired 
     private PasswordEncoder passwordEncoder;
 
-    public boolean login(String email, String password)
-    {
-        Optional<UserEntity> optionalLogin = login.findByEmail(email);
+    public boolean login(String email, String password) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if(optionalLogin.isPresent()){
-            UserEntity user = optionalLogin.get();
-            
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
             return passwordEncoder.matches(password, user.getPassword());
         }
         return false;
     }
 
-    public UserEntity findByAccount(String email) {
-        return login.findByEmail(email)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng"));
     }
 }
