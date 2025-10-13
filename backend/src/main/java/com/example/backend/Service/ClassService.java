@@ -45,7 +45,6 @@ public class ClassService {
             throw new RuntimeException("Chỉ giáo viên được phép tạo lớp");
         }
 
-        // Tạo entity từ DTO request
         ClassEntity classEntity = new ClassEntity();
         classEntity.setClassCode(createClassRequest.getClassCode());
         classEntity.setClassName(createClassRequest.getClassName());
@@ -67,10 +66,10 @@ public class ClassService {
         }
 
         // Kiểm tra mã lớp mới không trùng với lớp khác
-        if (!existingClass.getClassCode().equals(updateClassRequest.getClassCode()) &&
-                classRepository.existsByClassCode(updateClassRequest.getClassCode())) {
-            throw new RuntimeException("Mã lớp đã tồn tại: " + updateClassRequest.getClassCode());
-        }
+        // if (!existingClass.getClassCode().equals(updateClassRequest.getClassCode()) &&
+        //         classRepository.existsByClassCode(updateClassRequest.getClassCode())) {
+        //     throw new RuntimeException("Mã lớp đã tồn tại: " + updateClassRequest.getClassCode());
+        // }
 
         // Cập nhật thông tin từ DTO
         existingClass.setClassCode(updateClassRequest.getClassCode());
@@ -86,7 +85,7 @@ public class ClassService {
         ClassEntity classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy lớp"));
 
-        // Kiểm tra giáo viên có quyền xóa lớp này không
+        // Kiểm tra giáo viên có phải là giáo viên tạo lớp này
         if (!classEntity.getTeacher().getUserId().equals(teacherId)) {
             throw new RuntimeException("Bạn không có quyền xóa lớp này");
         }
@@ -108,7 +107,7 @@ public class ClassService {
             throw new RuntimeException("Bạn không có quyền thêm sinh viên vào lớp này");
         }
 
-        // Kiểm tra sinh viên đã có trong lớp chưa (SỬA LẠI)
+        // Kiểm tra sinh viên đã có trong lớp chưa
         boolean alreadyEnrolled = classStudentRepository.existsByClassObjAndStudent(classEntity, student);
         if (alreadyEnrolled) {
             throw new RuntimeException("Sinh viên đã có trong lớp học này");
@@ -133,7 +132,7 @@ public class ClassService {
             throw new RuntimeException("Bạn không có quyền xóa sinh viên khỏi lớp này");
         }
 
-        // Tìm và xóa ClassStudent (SỬA LẠI)
+        // Tìm và xóa ClassStudent
         ClassStudent classStudent = classStudentRepository.findByClassIdAndStudentId(classId, studentId)
                 .orElseThrow(() -> new RuntimeException("Sinh viên không có trong lớp học này"));
 
@@ -151,7 +150,7 @@ public class ClassService {
                 .collect(Collectors.toList());
     }
 
-    // Lấy danh sách lớp của giáo viên (dùng DTO)
+    // Lấy danh sách lớp của giáo viên
     public List<ClassDTO.ClassSummary> getClassesByTeacher(Long teacherId) {
         User teacher = userRepository.findById(teacherId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy giáo viên"));
@@ -162,7 +161,7 @@ public class ClassService {
                 .collect(Collectors.toList());
     }
 
-    // Lấy thông tin chi tiết lớp (dùng DTO)
+    // Lấy thông tin chi tiết lớp
     public ClassDTO.ClassResponse getClassDetail(Long classId) {
         ClassEntity classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy lớp học"));
@@ -170,7 +169,7 @@ public class ClassService {
         return ClassDTO.ClassResponse.fromEntity(classEntity);
     }
 
-    // Lấy danh sách lớp sinh viên đã đăng ký (dùng DTO)
+    // Lấy danh sách lớp sinh viên đã đăng ký
     public List<ClassDTO.ClassSummary> getClassesByStudent(Long studentId) {
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên"));
