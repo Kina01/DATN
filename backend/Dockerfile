@@ -1,27 +1,18 @@
-# -------- BUILD STAGE --------
-# Sử dụng Maven + Temurin JDK 21 để build
+# BUILD STAGE: build backend/backend bằng Maven (JDK 21)
 FROM maven:3.9.6-eclipse-temurin-21 AS build
-
 WORKDIR /app
 
-# Copy toàn bộ project vào container
-COPY . .
+# copy chỉ thư mục backend để tránh copy cả repo
+COPY backend ./backend
 
-# Build jar (bỏ test cho nhanh)
+# vào thư mục backend và build
+WORKDIR /app/backend
 RUN mvn clean package -DskipTests
 
-
-# -------- RUN STAGE --------
-# Chạy bằng JRE 21 nhẹ hơn
+# RUN STAGE
 FROM eclipse-temurin:21-jre
-
 WORKDIR /app
+COPY --from=build /app/backend/target/*.jar app.jar
 
-# Copy file jar từ stage build
-COPY --from=build /app/target/*.jar app.jar
-
-# Expose port 8080
 EXPOSE 8080
-
-# ENTRYPOINT chạy Spring Boot
 ENTRYPOINT ["java", "-jar", "app.jar"]
