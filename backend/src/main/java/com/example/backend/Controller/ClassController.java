@@ -7,6 +7,8 @@ import com.example.backend.Model.ClassEntity;
 import com.example.backend.Model.ClassStudent;
 import com.example.backend.Model.User;
 import com.example.backend.Service.ClassService;
+import com.example.backend.Service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/classes")
-@CrossOrigin(origins = { "http://localhost:4200",
-        "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true")
+// @CrossOrigin(origins = { "http://localhost:4200",
+//         "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true")
 public class ClassController {
 
     @Autowired
     private ClassService classService;
+
+    @Autowired
+    private UserService userService;
 
     // Tạo lớp mới
     @PostMapping("/add-class")
@@ -211,6 +217,29 @@ public class ClassController {
         } catch (RuntimeException e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", e.getMessage());
+            response.put("status", "error");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/search-students")
+    public ResponseEntity<Map<String, Object>> searchStudents(@RequestParam String keyword) {
+        try {
+            List<User> students = userService.searchStudents(keyword);
+            
+            List<UserDTO> studentDTOs = students.stream()
+                    .map(UserDTO::fromEntity)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Tìm kiếm sinh viên thành công");
+            response.put("status", "success");
+            response.put("data", studentDTOs);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Lỗi tìm kiếm sinh viên: " + e.getMessage());
             response.put("status", "error");
             return ResponseEntity.badRequest().body(response);
         }

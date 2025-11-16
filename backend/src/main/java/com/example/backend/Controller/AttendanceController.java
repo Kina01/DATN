@@ -14,8 +14,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/attendances")
-@CrossOrigin(origins = { "http://localhost:4200", "http://192.168.0.107:4200" }, 
-             allowedHeaders = "*", allowCredentials = "true")
+// @CrossOrigin(origins = { "http://localhost:4200", "http://172.50.169.165:4200" }, 
+//              allowedHeaders = "*", allowCredentials = "true")
 public class AttendanceController {
 
     @Autowired

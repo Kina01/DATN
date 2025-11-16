@@ -1,86 +1,73 @@
 class User {
-  final String id;
-  final String fullname;
+  final int userId;
   final String email;
-  final DateTime? createdAt;
+  final String fullName;
+  final String role;
 
   User({
-    required this.id,
-    required this.fullname,
+    required this.userId,
     required this.email,
-    this.createdAt,
+    required this.fullName,
+    required this.role,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] ?? '',
-      fullname: json['fullname'] ?? '',
+      userId: json['userId'] ?? 0,
       email: json['email'] ?? '',
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      fullName: json['fullName'] ?? '',
+      role: json['role'] ?? '',
     );
   }
 
+  bool get isTeacher => role == 'TEACHER';
+  bool get isStudent => role == 'STUDENT';
+
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'fullname': fullname,
+      'userId': userId,
       'email': email,
-      'createdAt': createdAt?.toIso8601String(),
+      'fullName': fullName,
+      'role': role,
     };
   }
 }
 
-class RegisterRequest {
-  final String fullname;
+class LoginRequest {
   final String email;
   final String password;
-  final String verificationCode;
 
-  RegisterRequest({
-    required this.fullname,
+  LoginRequest({
     required this.email,
     required this.password,
-    required this.verificationCode,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'fullname': fullname,
       'email': email,
       'password': password,
-      'verificationCode': verificationCode,
     };
   }
 }
 
-class VerificationRequest {
-  final String email;
-
-  VerificationRequest({required this.email});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-    };
-  }
-}
-
-class ApiResponse {
-  final String status;
+class LoginResponse {
   final String message;
-  final dynamic data;
+  final String status;
+  final User? data;
 
-  ApiResponse({
-    required this.status,
+  LoginResponse({
     required this.message,
+    required this.status,
     this.data,
   });
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
-    return ApiResponse(
-      status: json['status'] ?? '',
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
       message: json['message'] ?? '',
-      data: json['data'],
+      status: json['status'] ?? '',
+      data: json['data'] != null ? User.fromJson(json['data']) : null,
     );
   }
+
+  bool get isSuccess => status == 'success';
 }
