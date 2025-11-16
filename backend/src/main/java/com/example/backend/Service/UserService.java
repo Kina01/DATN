@@ -1,21 +1,41 @@
 package com.example.backend.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.backend.Model.User;
 import com.example.backend.Repository.UserRepository;
 
 @Service
-public class RegisterService {
-
-    @Autowired
+public class UserService {
+    
+    @Autowired 
     private UserRepository userRepository;
-
-    @Autowired
+    
+    @Autowired 
     private PasswordEncoder passwordEncoder;
+
+    public boolean login(String email, String password) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+        return false;
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng"));
+    }
 
     @Transactional
     public boolean register(String fullName, String email, String password, User.Role role) {
@@ -49,5 +69,15 @@ public class RegisterService {
 
     public boolean checkEmailExists(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public List<User> searchStudents(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            // Trả về tất cả sinh viên nếu không có keyword
+            return userRepository.findAll().stream()
+                    .filter(user -> user.getRole() == User.Role.STUDENT)
+                    .collect(Collectors.toList());
+        }
+        return userRepository.searchStudents(keyword.trim());
     }
 }

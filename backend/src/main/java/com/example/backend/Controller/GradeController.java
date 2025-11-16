@@ -13,8 +13,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/grades")
-@CrossOrigin(origins = { "http://localhost:4200",
-        "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true")
+// @CrossOrigin(origins = { "http://localhost:4200",
+//         "http://192.168.0.107:4200" }, allowedHeaders = "*", allowCredentials = "true")
 public class GradeController {
 
     @Autowired
